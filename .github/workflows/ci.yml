@@ -1,47 +1,21 @@
-name: DotNet
+name: DotNet multiple version testing
 
 on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
-
-env:
-  DOTNET_NOLOGO: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: 1
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  POWERSHELL_TELEMETRY_OPTOUT: 1
-  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    name: Test
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2019, windows-2022]
-        cache: [true, false]
-      fail-fast: false
+        dotnet-version: ['3.x','6.x']
+    
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - name: Setup dotnet # ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v4
         with:
-          fetch-depth: 0
-
-      - name: Cache NuGet packages
-        if: matrix.cache
-        uses: actions/cache@v2
-        with:
-          path: ${{ github.workspace }}/.nuget/packages
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: ${{ runner.os }}-nuget-
-
-      - name: Setup DotNet 6
-        uses: jetersen/setup-dotnet@fix/usePwsh
-        with:
-          dotnet-version: 6.0.x
-
-      - name: DotNet restore
-        run: |
-          dotnet new nugetconfig
-          dotnet restore -v n
+          dotnet-version: ${{ matrix.dotnet-version }}
+      # You can test your matrix by printing the current dotnet version
+      - name: Display dotnet version
+        run: dotnet --version
