@@ -11,5 +11,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Setup Dotnet
         uses: actions/setup-dotnet@dependabot/npm_and_yarn/fast-xml-parser-4.4.1
+        with:
+          dotnet-version: '6.0.x'
       - run: dotnet build
       - run: dotnet test
