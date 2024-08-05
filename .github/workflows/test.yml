@@ -12,6 +12,6 @@ jobs:
       - name: Setup Dotnet
         uses: actions/setup-dotnet@dependabot/npm_and_yarn/fast-xml-parser-4.4.1
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '7.0'
       - run: dotnet build
       - run: dotnet test
