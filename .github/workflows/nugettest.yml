@@ -1,28 +1,28 @@
-name: Publish .NET Application
-
+name: Test Setup Dotnet Action Publish nuget.org
 on:
+  push:
+    branches:
+      - setup-dotnet
   workflow_dispatch:
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: Publish with dotnet
-        run: dotnet publish --configuration Release --output ./output
-
-      - name: Publish to NuGet
-        run: 'dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_AUTH_TOKEN }} --source https://api.nuget.org/v3/index.json'
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+    - name: Pack
+      run: dotnet pack --configuration Release --no-build --output ./nupkg
+    - name: Publish to NuGet
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY}}
+      run: dotnet nuget push ./nupkg/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
       
 
