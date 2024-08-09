@@ -23,4 +23,6 @@ jobs:
         run: dotnet publish --configuration Release --output ./output
 
       - name: Publish to NuGet
-        run: dotnet nuget push ./output/*.nupkg --api-key ${{ NUGET_AUTH_TOKEN }} --source https://api.nuget.org/v3/index.json
+        run: 'dotnet nuget push ./output/*.nupkg --api-key ${{ secrets.NUGET_AUTH_TOKEN }} --source https://api.nuget.org/v3/index.json'
+      
+
