@@ -7,7 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8239B3B3-7C3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "src\Api\Api.csproj", "{6899967A-87B1-4597-972C-D4A3BD24C8AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "src\Library\Library.csproj", "{FB7F8F6E-6050-4323-81B1-30610A33D0C1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "src\Library\Library_Gowri36.csproj", "{FB7F8F6E-6050-4323-81B1-30610A33D0C1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A561066C-0DDA-4636-AD82-E8FC8FDF8FF2}"
 EndProject
