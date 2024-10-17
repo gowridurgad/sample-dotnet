@@ -1,0 +1,21 @@
+name: issue540
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Test_Dependabot:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Before setup
+      run: dotnet --info
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+    - name: After dotnet 9
+      run: dotnet --info
+    - uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+    - name: After dotnet 8
+      run: dotnet --info
