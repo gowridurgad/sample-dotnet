@@ -9,27 +9,13 @@ jobs:
     steps:
     - name: Before setup
       run: dotnet --info
-      
-    - name: Setup .NET 9
-      uses: actions/setup-dotnet@v4
+    - uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '9.0.x'
-      env:
-        DOTNET_ROOT: /usr/share/dotnet/dotnet9
-      
-    - name: After .NET 9
+    - name: After dotnet 9
       run: dotnet --info
-      env:
-        DOTNET_ROOT: /usr/share/dotnet/dotnet9
-
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v4
+    - uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
-      env:
-        DOTNET_ROOT: /usr/share/dotnet/dotnet8
-        
-    - name: After .NET 8
+        dotnet-version: '7.0.x'
+    - name: After dotnet 7
       run: dotnet --info
-      env:
-        DOTNET_ROOT: /usr/share/dotnet/dotnet8
