@@ -7,12 +7,29 @@ jobs:
   Test_Dependabot:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup dotnet
+    - name: Before setup
+      run: dotnet --info
+      
+    - name: Setup .NET 9
       uses: actions/setup-dotnet@v4
       with:
-         dotnet-version: | 
-          3.1.x
-          5.0.x
-    - name: After dotnet 8
+        dotnet-version: '9.0.x'
+      env:
+        DOTNET_ROOT: /usr/share/dotnet/dotnet9
+      
+    - name: After .NET 9
       run: dotnet --info
+      env:
+        DOTNET_ROOT: /usr/share/dotnet/dotnet9
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+      env:
+        DOTNET_ROOT: /usr/share/dotnet/dotnet8
+        
+    - name: After .NET 8
+      run: dotnet --info
+      env:
+        DOTNET_ROOT: /usr/share/dotnet/dotnet8
