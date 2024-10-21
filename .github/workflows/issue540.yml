@@ -11,7 +11,7 @@ jobs:
       run: dotnet --info
     - uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.x'
+        dotnet-version: '7.0.x'
       env:
         DOTNET_ROOT: /usr/share/dotnet
     - name: After dotnet 9
@@ -20,7 +20,7 @@ jobs:
         DOTNET_ROOT: /usr/share/dotnet
     - uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '7.0.x'
+        dotnet-version: '9.0.x'
       env:
         DOTNET_ROOT: /usr/share/dotnet
     - name: After dotnet 7
