@@ -11,8 +11,7 @@ jobs:
       
       - name: Remove existing .NET packages and configurations
         run: |
-          sudo apt remove --purge -y dotnet*
-          sudo apt remove --purge -y aspnetcore*
+          
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/lib/dotnet
           sudo rm /etc/apt/sources.list.d/microsoft-prod.list || true
