@@ -9,19 +9,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
-      - name: Remove all .NET packages
+      - name: Remove .NET SDKs
         run: |
-          sudo apt remove --purge -y dotnet*
-          sudo apt remove --purge -y aspnetcore*
+          sudo apt-get remove --purge -y dotnet-sdk-*
+          sudo apt-get autoremove -y
+      - name: Verify .NET Installation
+        run: dotnet --info
 
-      - name: Delete PMC repository
-        run: sudo rm /etc/apt/sources.list.d/microsoft-prod.list || true
 
-      - name: Update APT
-        run: sudo apt update
-
-      - name: Install .NET SDK 6.0
+      - name: Install .NET SDK 8.0
         run: sudo apt install -y dotnet-sdk-8.0
 
       - name: Verify .NET Installation
