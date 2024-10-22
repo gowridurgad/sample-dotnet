@@ -1,23 +1,13 @@
-name: Cleanup .NET SDKs
+name: Install .NET from Jammy Feed
 
 on: [push]
 
 jobs:
-  cleanup_dotnet:
+  setup_dotnet:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Remove all .NET SDK and runtime versions
-        run: |
-          sudo apt-get remove --purge -y dotnet-sdk-6.0 dotnet-sdk-7.0 dotnet-sdk-8.0
-          sudo apt-get remove --purge -y aspnetcore-runtime-6.0 aspnetcore-runtime-7.0 aspnetcore-runtime-8.0
-          sudo apt-get remove --purge -y dotnet-runtime-6.0 dotnet-runtime-7.0 dotnet-runtime-8.0
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/lib/dotnet
-          sudo apt-get autoremove -y
-          sudo apt-get clean
       
       - name: Before setup
         run: dotnet --info
