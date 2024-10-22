@@ -1,40 +1,19 @@
-name: Setup Multiple .NET SDKs
-
+name: dotnet package
 on: [push]
-
 jobs:
-  setup_dotnet:
-    runs-on: ubuntu-22.04
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Before setup
+      - uses: actions/checkout@v4
+      - name: Setup dotnet 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+          install-dir: '/usr/lib/dotnet/sdk'
+      - name: Setup dotnet 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          install-dir: '/usr/lib/dotnet/sdk'
+      - name: Display dotnet version
         run: dotnet --info
-
-      - name: Install .NET 9.0.x
-        run: |
-          mkdir -p /usr/lib/dotnet
-          curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 9.0.0 --install-dir /usr/lib/dotnet
-        env:
-          DOTNET_ROOT: /usr/lib/dotnet
-          PATH: /usr/lib/dotnet:$PATH
-
-      - name: After dotnet 9
-        run: dotnet --info
-        env:
-          DOTNET_ROOT: /usr/lib/dotnet
-          PATH: /usr/lib/dotnet:$PATH
-
-      - name: Install .NET 8.0.x
-        run: |
-          curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 8.0.0 --install-dir /usr/lib/dotnet
-        env:
-          DOTNET_ROOT: /usr/lib/dotnet
-          PATH: /usr/lib/dotnet:$PATH
-
-      - name: After dotnet 8
-        run: dotnet --info
-        env:
-          DOTNET_ROOT: /usr/lib/dotnet
-          PATH: /usr/lib/dotnet:$PATH
