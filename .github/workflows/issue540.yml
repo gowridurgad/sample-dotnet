@@ -4,21 +4,23 @@ on: [push]
 
 jobs:
   setup_dotnet:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       
-    
-
-      - name: Delete PMC repository
-        run: sudo rm /etc/apt/sources.list.d/microsoft-prod.list || true
-
-      - name: Update APT
-        run: sudo apt update
+      - name: Remove existing .NET packages and configurations
+        run: |
+          sudo apt remove --purge -y dotnet*
+          sudo apt remove --purge -y aspnetcore*
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/lib/dotnet
+          sudo rm /etc/apt/sources.list.d/microsoft-prod.list || true
+          sudo apt update
 
       - name: Install .NET SDK from Jammy feed
         run: sudo apt install -y dotnet-sdk-6.0
+
 
       - name: Verify .NET Installation
         run: dotnet --info
