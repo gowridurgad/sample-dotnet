@@ -13,8 +13,7 @@ jobs:
         run: |
           sudo apt-get remove --purge -y dotnet-sdk-*
           sudo apt-get autoremove -y
-      - name: Verify .NET Installation
-        run: dotnet --info
+     
 
 
       - name: Install .NET SDK 8.0
