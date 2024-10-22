@@ -9,11 +9,13 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-          install-dir: '/usr/lib/dotnet/sdk'
+      - name: Add dotnet 9 to PATH
+        run: echo "/usr/lib/dotnet" >> $GITHUB_PATH
       - name: Setup dotnet 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-          install-dir: '/usr/lib/dotnet/sdk'
+      - name: Add dotnet 8 to PATH
+        run: echo "/usr/lib/dotnet" >> $GITHUB_PATH
       - name: Display dotnet version
         run: dotnet --info
