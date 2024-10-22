@@ -20,6 +20,12 @@ jobs:
       - name: Install .NET SDK from Jammy feed
         run: sudo apt install -y dotnet-sdk-8.0
 
+      - name: Set .NET SDK path
+        run: |
+          export DOTNET_ROOT=/usr/lib/dotnet
+          export PATH=$DOTNET_ROOT:$PATH
+          echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
+          echo "PATH=$DOTNET_ROOT:$PATH" >> $GITHUB_ENV
 
       - name: Verify .NET Installation
         run: dotnet --info
