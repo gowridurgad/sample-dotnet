@@ -9,15 +9,16 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0.x'
-      - name: Add dotnet 9 to PATH
-        run: echo "/usr/lib/dotnet" >> $GITHUB_PATH
+      - name: Set DOTNET_ROOT for dotnet 9
+        run: echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
       - name: Display dotnet version
         run: dotnet --info
+
       - name: Setup dotnet 8
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
-      - name: Add dotnet 8 to PATH
-        run: echo "/usr/lib/dotnet" >> $GITHUB_PATH
+      - name: Set DOTNET_ROOT for dotnet 8
+        run: echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
       - name: Display dotnet version
         run: dotnet --info
