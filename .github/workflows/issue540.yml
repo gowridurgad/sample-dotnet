@@ -1,13 +1,40 @@
-name: Cleanup .NET SDKs
+name: Setup Multiple .NET SDKs
 
 on: [push]
 
 jobs:
-  cleanup_dotnet:
+  setup_dotnet:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Remove all .NET SDK and runtime versions
+      - name: Before setup
         run: dotnet --info
+
+      - name: Install .NET 9.0.x
+        run: |
+          mkdir -p /usr/lib/dotnet
+          curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 9.0.0 --install-dir /usr/lib/dotnet
+        env:
+          DOTNET_ROOT: /usr/lib/dotnet
+          PATH: /usr/lib/dotnet:$PATH
+
+      - name: After dotnet 9
+        run: dotnet --info
+        env:
+          DOTNET_ROOT: /usr/lib/dotnet
+          PATH: /usr/lib/dotnet:$PATH
+
+      - name: Install .NET 8.0.x
+        run: |
+          curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --version 8.0.0 --install-dir /usr/lib/dotnet
+        env:
+          DOTNET_ROOT: /usr/lib/dotnet
+          PATH: /usr/lib/dotnet:$PATH
+
+      - name: After dotnet 8
+        run: dotnet --info
+        env:
+          DOTNET_ROOT: /usr/lib/dotnet
+          PATH: /usr/lib/dotnet:$PATH
