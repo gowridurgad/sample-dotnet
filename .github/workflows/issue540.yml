@@ -1,23 +1,27 @@
-name: Switch to Native Jammy Packages
+name: Install .NET from Jammy Feed
 
-on: 
-  workflow_dispatch:
+on: [push]
 
 jobs:
   setup_dotnet:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Remove .NET SDKs
+      
+      - name: Remove existing .NET packages
         run: |
-          sudo apt-get remove --purge -y dotnet-sdk-*
-          sudo apt-get autoremove -y
-     
+          sudo apt remove --purge -y dotnet*
+          sudo apt remove --purge -y aspnetcore*
 
+      - name: Delete PMC repository
+        run: sudo rm /etc/apt/sources.list.d/microsoft-prod.list || true
 
-      - name: Install .NET SDK 8.0
-        run: sudo apt install -y dotnet-sdk-8.0
+      - name: Update APT
+        run: sudo apt update
+
+      - name: Install .NET SDK from Jammy feed
+        run: sudo apt install -y dotnet-sdk-6.0
 
       - name: Verify .NET Installation
         run: dotnet --info
