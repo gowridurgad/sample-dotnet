@@ -9,24 +9,5 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Remove existing .NET packages and configurations
-        run: |
-          
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/lib/dotnet
-          sudo rm /etc/apt/sources.list.d/microsoft-prod.list || true
-          sudo apt update
-
-      - name: Install .NET SDK from Jammy feed
-        run: sudo apt install -y dotnet-sdk-8.0
-
-      - name: Set .NET SDK path
-        run: |
-          echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
-          echo "PATH=/usr/lib/dotnet:$PATH" >> $GITHUB_ENV
-
-      - name: Verify .NET Installation
+      - name: Before setup
         run: dotnet --info
-        env:
-          DOTNET_ROOT: /usr/lib/dotnet
-          PATH: /usr/lib/dotnet:$PATH
