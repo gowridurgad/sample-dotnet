@@ -11,7 +11,8 @@ jobs:
       
       - name: Remove existing .NET packages and configurations
         run: |
-         
+          sudo apt remove --purge -y dotnet*
+          sudo apt remove --purge -y aspnetcore*
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/lib/dotnet
           sudo rm /etc/apt/sources.list.d/microsoft-prod.list || true
@@ -22,10 +23,11 @@ jobs:
 
       - name: Set .NET SDK path
         run: |
-          export DOTNET_ROOT=/usr/lib/dotnet
-          export PATH=$DOTNET_ROOT:$PATH
           echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
-          echo "PATH=$DOTNET_ROOT:$PATH" >> $GITHUB_ENV
+          echo "PATH=/usr/lib/dotnet:$PATH" >> $GITHUB_ENV
 
       - name: Verify .NET Installation
         run: dotnet --info
+        env:
+          DOTNET_ROOT: /usr/lib/dotnet
+          PATH: /usr/lib/dotnet:$PATH
