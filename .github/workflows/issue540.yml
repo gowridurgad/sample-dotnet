@@ -18,6 +18,14 @@ jobs:
           echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
           echo "/usr/lib/dotnet" >> $GITHUB_PATH
 
+      - name: Manually install .NET 9.0.x SDK
+        run: |
+          mkdir -p /usr/lib/dotnet
+          wget https://dotnetcli.azureedge.net/dotnet/Sdk/9.0.100-rc.2.24474.11/dotnet-sdk-9.0.100-rc.2.24474.11-linux-x64.tar.gz
+          tar -C /usr/lib/dotnet -xzf dotnet-sdk-9.0.100-rc.2.24474.11-linux-x64.tar.gz
+        env:
+          DOTNET_ROOT: /usr/lib/dotnet
+
       - name: Setup .NET ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v4
         with:
@@ -27,3 +35,5 @@ jobs:
 
       - name: Display .NET version
         run: dotnet --info
+
+     
