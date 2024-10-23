@@ -1,26 +1,27 @@
-name: dotnet package
+name: .NET Build
+
 on: [push]
+
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        dotnet-version: ['8.0.x', '9.0.x']
+
     steps:
       - uses: actions/checkout@v4
-      - name: Setup dotnet 9
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'
-      - name: Set DOTNET_ROOT for dotnet 9 and display version
-        run: |
-          echo "DOTNET_ROOT=usr/lib/dotnet" >> $GITHUB_ENV
-          export DOTNET_ROOT=usr/lib/dotnet
-          dotnet --info
 
-      - name: Setup dotnet 8
+      - name: Set DOTNET_ROOT
+        run: echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
+
+      - name: Setup .NET ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
-      - name: Set DOTNET_ROOT for dotnet 8 and display version
-        run: |
-          echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
-          export DOTNET_ROOT=/usr/lib/dotnet
-          dotnet --info
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Display .NET version
+        run: dotnet --version
+
+      
