@@ -13,15 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set DOTNET_ROOT
-        run: echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
+      - name: Set DOTNET_ROOT and update PATH
+        run: |
+          echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
+          echo "/usr/lib/dotnet" >> $GITHUB_PATH
 
       - name: Setup .NET ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
+        env:
+          DOTNET_ROOT: /usr/lib/dotnet
 
       - name: Display .NET version
-        run: dotnet --version
-
-      
+        run: dotnet --info
