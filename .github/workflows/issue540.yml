@@ -12,7 +12,7 @@ jobs:
 
     - name: Create symbolic links for .NET SDKs
       run: |
-        mkdir -p /usr/share/dotnet
+        mkdir -p /usr/lib/dotnet
         ln -s /usr/lib/dotnet $HOME/.dotnet
 
     - name: Install .NET 9.0
