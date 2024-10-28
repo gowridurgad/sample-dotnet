@@ -1,4 +1,4 @@
-name: .NET Build
+name: Install .NET Manually
 
 on: [push]
 
@@ -6,27 +6,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        dotnet-version: ['8.0.x', '9.0.x']
-
     steps:
-      - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set DOTNET_INSTALL_DIR and update PATH
-        run: |
-          echo "DOTNET_INSTALL_DIR=$HOME/.dotnet" >> $GITHUB_ENV
-          echo "DOTNET_ROOT=$HOME/.dotnet" >> $GITHUB_ENV
-          echo "$HOME/.dotnet" >> $GITHUB_PATH
+    - name: Set DOTNET_INSTALL_DIR and update PATH
+      run: |
+        echo "DOTNET_INSTALL_DIR=/usr/lib/dotnet" >> $GITHUB_ENV
+        echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
+        echo "/usr/lib/dotnet" >> $GITHUB_PATH
 
-      - name: Setup .NET ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-        env:
-          DOTNET_INSTALL_DIR: $HOME/.dotnet
-          DOTNET_ROOT: $HOME/.dotnet
+    - name: Install .NET 7.0
+      run: |
+        mkdir -p /usr/lib/dotnet
+        wget https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-7.0.100-linux-x64-binaries
+        tar -zxf sdk-7.0.100-linux-x64-binaries -C /usr/lib/dotnet
 
-      - name: Display .NET version
-        run: dotnet --info
-
+    - name: Install .NET 8.0
+      run: |
+        mkdir -p /usr/lib/dotnet
+        wget https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-8.0.100-linux-x64-binaries
+        tar -zxf sdk-8.0.100-linux-x64-binaries -C /usr/lib/dotnet
