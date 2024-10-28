@@ -12,18 +12,18 @@ jobs:
 
     - name: Set DOTNET_INSTALL_DIR and update PATH
       run: |
-        echo "DOTNET_INSTALL_DIR=/usr/lib/dotnet" >> $GITHUB_ENV
-        echo "DOTNET_ROOT=/usr/lib/dotnet" >> $GITHUB_ENV
-        echo "/usr/lib/dotnet" >> $GITHUB_PATH
+        echo "DOTNET_INSTALL_DIR=$HOME/.dotnet" >> $GITHUB_ENV
+        echo "DOTNET_ROOT=$HOME/.dotnet" >> $GITHUB_ENV
+        echo "$HOME/.dotnet" >> $GITHUB_PATH
 
     - name: Install .NET 7.0
       run: |
-        mkdir -p /usr/lib/dotnet
+        mkdir -p $HOME/.dotnet
         wget https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-7.0.100-linux-x64-binaries
         tar -zxf sdk-7.0.100-linux-x64-binaries -C /usr/lib/dotnet
 
     - name: Install .NET 8.0
       run: |
-        mkdir -p /usr/lib/dotnet
+        mkdir -p $HOME/.dotnet
         wget https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-8.0.100-linux-x64-binaries
         tar -zxf sdk-8.0.100-linux-x64-binaries -C /usr/lib/dotnet
