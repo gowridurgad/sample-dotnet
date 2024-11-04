@@ -5,10 +5,12 @@ on: [push]
 jobs:
   build:
     runs-on: self-hosted
-
+    env:
+      HTTP_PROXY: http://proxy.example.com:8080
+      HTTPS_PROXY: https://proxy.example.com:8080
     steps:
-    - name: test setup dotnet
-      id: testdotnet
-      uses: actions/setup-dotnet@c7e7147fd3e41056e75a761416c06f5fa781b5fb
+    - uses: actions/checkout@v4
+    - uses: actions/setup-dotnet@v4
       with:
-          dotnet-version: '7'
+        dotnet-version: '7.0.x'
+  
