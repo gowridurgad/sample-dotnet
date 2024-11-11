@@ -10,7 +10,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: stevelacey/setup-node@ersion-file-defaults
+      - uses: gowridurgad/setup-node-fork@test-composite
         with:
           node-version-file: ${{ github.action_path }}/.nvmrc
-    
