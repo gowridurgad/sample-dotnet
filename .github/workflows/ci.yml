@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Setup dotnet # ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v4
+        uses: releases/v3/setup-dotnet@remove-fallback-cdn-logic-v3
         with:
           dotnet-version:  ${{ matrix.dotnet-version }}
       # You can test your matrix by printing the current dotnet version
