@@ -7,7 +7,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest, ubuntu-22.04, ubuntu-latest, macos-13, imagegenteam-win2022-16cores, imagegenteam-win2019-16cores, imagegenteam-ubuntu2204-16cores]
+        os: [ macos-latest, windows-latest, ubuntu-22.04, ubuntu-latest, macos-13]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -17,5 +17,7 @@ jobs:
           dotnet-version: '7.x'
           cache: true
 
-      - name: Verify installation
-        run: dotnet --version
+      - name: Restore dependencies
+        run: dotnet restore
+
+     
