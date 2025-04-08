@@ -1,5 +1,6 @@
 name: 620 actions/cachePR testing 
 on:
+  
   workflow_dispatch:
 jobs:
   build:
@@ -7,17 +8,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ macos-latest, windows-latest, ubuntu-22.04, ubuntu-latest, macos-13]
+        os: [macos-latest, windows-latest, ubuntu-22.04, ubuntu-latest, macos-13, imagegenteam-win2022-16cores, imagegenteam-win2019-16cores, imagegenteam-ubuntu2204-16cores, imagegenteam-linux-arm64-8-cores]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set environment variable for dotnet install dir
+        if: matrix.os == 'imagegenteam-linux-arm64-8-cores'
+        run: echo "DOTNET_INSTALL_DIR=${{ runner.temp }}/dotnet" >> $GITHUB_ENV
+
       - name: Set up dotnet
         uses: mahabaleshwars/setup-dotnet@upgrade-cache-for-v3
         with:
           dotnet-version: '7.x'
           cache: true
-
+        
       - name: Restore dependencies
-        run: dotnet restore
-
+        run: dotnet restore --use-lock-file
      
