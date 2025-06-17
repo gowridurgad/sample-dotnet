@@ -12,4 +12,4 @@ jobs:
     - name: Test Dotnet 
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.x'
+        dotnet-version: '2.2.402'
