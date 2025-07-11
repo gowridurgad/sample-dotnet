@@ -1,4 +1,7 @@
 name: Test Setup Dotnet Action Publish nuget.org
+permissions:
+  contents: read
+  packages: write
 on:
   
   workflow_dispatch:
@@ -22,7 +25,7 @@ jobs:
       working-directory: ./MyApp
     - name: Publish to NuGet
       env:
-        NUGET_API_KEY: ${{ secrets.NUGET_AUTH_TOKEN}}
+        NUGET_API_KEY: ${{ secrets.NUGET_KEY}}
       run: dotnet nuget push ./MyApp/nupkg/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
       
 
