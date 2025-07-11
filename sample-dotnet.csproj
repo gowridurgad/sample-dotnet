@@ -1,21 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>TestPackage.SampleDotnet</PackageId>
-    <Version>0.0.1</Version>
-    <Authors>TestUser</Authors>
-    <Description>Testing NuGet publish with a single project</Description>
-    <PackageOutputPath>./nupkg</PackageOutputPath>
-    <IsPackable>true</IsPackable>
+    <TargetFramework>net8.0</TargetFramework>
+    <PackageId>YourPackageName</PackageId>
+    <Version>1.0.2</Version>
+    <Authors>gowridurgad</Authors>
+    <Description>A useful description of your package</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/gowridurgad/sample-dotnet</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <!-- Include test frameworks -->
-    <PackageReference Include="xunit" Version="2.4.2" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
-  </ItemGroup>
 
 </Project>
