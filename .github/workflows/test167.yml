@@ -1,0 +1,51 @@
+name: Test Multiple NuGet Sources
+
+on:
+  workflow_dispatch:
+
+jobs:
+  multi-source-test:
+    runs-on: ubuntu-latest
+
+    env:
+      NUGET_AUTH_TOKEN: ${{ secrets.NUGET_API_KEY }}
+     
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add NuGet.Config with multiple sources
+        run: |
+          cat > NuGet.Config <<EOF
+          <?xml version="1.0" encoding="utf-8"?>
+          <configuration>
+            <packageSources>
+              <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
+              <add key="github" value="https://nuget.pkg.github.com/${{ github.gowridurgad }}/index.json" />
+            </packageSources>
+          </configuration>
+          EOF
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+          # Only one source-url can be specified here; this is a limitation relevant to the test
+
+      # Optionally add authentication for GitHub Packages if needed
+      - name: Add GitHub Packages authentication (if needed)
+        run: |
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github. }}/index.json" \
+              --name github \
+              --username "${{ github.actor }}" \
+              --password "${{ secrets.GITHUB_TOKEN }}" \
+              --store-password-in-clear-text \
+              --configfile NuGet.Config
+
+      # If you have a test project that references packages from both sources, restore it
+      - name: Restore NuGet packages
+        run: dotnet restore --configfile NuGet.Config
+
+      # Optionally test a build
+      - name: Build
+        run: dotnet build
