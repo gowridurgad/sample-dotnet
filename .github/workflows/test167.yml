@@ -35,7 +35,7 @@ jobs:
       # Optionally add authentication for GitHub Packages if needed
       - name: Add GitHub Packages authentication (if needed)
         run: |
-          dotnet nuget add source "https://nuget.pkg.github.com/${{ github. }}/index.json" \
+          dotnet nuget add source "https://nuget.pkg.github.com/${{ github.gowridurgad }}/index.json" \
               --name github \
               --username "${{ github.actor }}" \
               --password "${{ secrets.GITHUB_TOKEN }}" \
