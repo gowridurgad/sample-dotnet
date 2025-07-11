@@ -1,8 +1,6 @@
 name: Test Setup Dotnet Action Publish nuget.org
 on:
-  push:
-    branches:
-      - setup-dotnet
+  
   workflow_dispatch:
 jobs:
   build:
