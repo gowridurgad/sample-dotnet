@@ -44,7 +44,7 @@ jobs:
 
       # If you have a test project that references packages from both sources, restore it
       - name: Restore NuGet packages
-        run: dotnet restore --configfile NuGet.Config
+        run: dotnet restore ./MyApp/MyApp.csproj
 
       # Optionally test a build
       - name: Build
