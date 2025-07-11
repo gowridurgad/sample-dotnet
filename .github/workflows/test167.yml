@@ -49,3 +49,4 @@ jobs:
       # Optionally test a build
       - name: Build
         run: dotnet build
+        working-directory: ./MyApp
