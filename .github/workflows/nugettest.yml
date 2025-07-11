@@ -13,11 +13,13 @@ jobs:
       with:
         dotnet-version: '8.0.x'
     - name: Restore dependencies
-      run: dotnet restore ./app/MyApp.csproj
+      run: dotnet restore ./MyApp/MyApp.csproj
     - name: Build
       run: dotnet build --configuration Release --no-restore
+      working-directory: ./MyApp
     - name: Pack
       run: dotnet pack --configuration Release --no-build --output ./nupkg
+      working-directory: ./MyApp
     - name: Publish to NuGet
       env:
         NUGET_API_KEY: ${{ secrets.NUGET_AUTH_TOKEN}}
