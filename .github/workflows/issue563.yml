@@ -10,7 +10,7 @@ jobs:
       - name: Set up .NET Core with global-json-file
         uses: actions/setup-dotnet@v4
         with:
-          global-json-file: global.json
+          dotnet0version: 9.0
 
 
 
