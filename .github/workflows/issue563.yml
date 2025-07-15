@@ -12,18 +12,11 @@ jobs:
         os: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET Core 7
+    - name: Setup .NET Core 
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '7.0'
-    - name: Setup .NET 8
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0'
-    - name: Setup .NET 9
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0'
+        global-json-file: global.json
+   
    
 
 
