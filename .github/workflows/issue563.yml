@@ -10,12 +10,10 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
+    env:
+        DOTNET_INSTALL_DIR: ${{ github.workspace }}/dotnet
     steps:
     - uses: actions/checkout@v4
-    - name: Setup .NET Core from global.json
-      uses: actions/setup-dotnet@v4
-      with:
-        global-json-file: global.json
     - name: Setup .NET Core 9.0
       uses: actions/setup-dotnet@v4
       with:
