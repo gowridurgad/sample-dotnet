@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NUGET_AUTH_TOKEN: ${{ secrets.NUGET_AUTH_TOKEN }}
+      NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
      
 
     steps:
