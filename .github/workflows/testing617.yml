@@ -1,6 +1,7 @@
 name: testing617
 
-on: workflow_dispatch:
+on: 
+ workflow_dispatch
 
 jobs:
   test-native-multiple-sources:
