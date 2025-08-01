@@ -21,7 +21,7 @@ jobs:
           <configuration>
             <packageSources>
               <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-              <add key="github" value="https://nuget.pkg.github.com/${{ github.gowridurgad }}/index.json" />
+              <add key="github" value="https://nuget.pkg.github.com/gowridurgad/index.json" />
             </packageSources>
           </configuration>
           EOF
