@@ -12,15 +12,15 @@ jobs:
       - name: setup-dotnet
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.0.x'
       - name: 'verify-dotnet'
         run: |
           dotnet tool install --global dotnet-script --version 1.6.0
           cat <<'EOF' > test.csx
           var version = Environment.Version;
-          if (version.Major != 8 || version.Minor != 0)
+          if (version.Major != 9 || version.Minor != 0)
           {
-            throw new Exception($"Want .NET 8.0.x, got {version}");
+            throw new Exception($"Want .NET 9.0.x, got {version}");
           }
           EOF
           dotnet-script test.csx
