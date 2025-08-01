@@ -1,22 +1,25 @@
-name: testing617
+name: TestMultiplePackageSources
 
-on: 
- workflow_dispatch
+on:
+  workflow_dispatch:
 
 jobs:
-  test-native-multiple-sources:
+  test-multiple-sources:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.0.x'
           source-url: |
             https://api.nuget.org/v3/index.json
-            https://nuget.pkg.github.com/${{ github.gowridurgad }}/index.json
+            https://nuget.pkg.github.com/gowriduragd/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-      - name: Build solution
+
+      - name: Restore packages with verbosity
+        run: dotnet restore MyApp/MyApp.csproj --verbosity detailed
+
+      - name: Build
         run: dotnet build MyApp/MyApp.csproj
-      - run: dotnet restore MyApp/MyApp.csproj
-       
