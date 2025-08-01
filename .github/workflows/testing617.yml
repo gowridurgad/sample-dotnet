@@ -16,4 +16,4 @@ jobs:
             https://nuget.pkg.github.com/${{ github.gowridurgad }}/index.json
       - run: dotnet restore
         env:
-          NUGET_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
