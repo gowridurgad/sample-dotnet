@@ -14,12 +14,12 @@ jobs:
           dotnet-version: '8.0.x'
           source-url: |
             https://api.nuget.org/v3/index.json
-            https://nuget.pkg.github.com/gowriduragd/index.json
+            # https://nuget.pkg.github.com/gowriduragd/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Restore packages with verbosity
-        run: dotnet restore MyApp/MyApp.csproj --verbosity detailed
+        run: dotnet restore MyApp/MyApp.csproj 
 
       - name: Build
         run: dotnet build MyApp/MyApp.csproj
