@@ -19,7 +19,7 @@ jobs:
           NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Restore packages 
-        run: dotnet restore 
+        run: dotnet restore --configfile nuget.config
 
       - name: Build
-        run: dotnet build 
+        run: dotnet build --configfile nuget.config
