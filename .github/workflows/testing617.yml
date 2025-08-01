@@ -18,8 +18,8 @@ jobs:
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
-      - name: Restore packages with verbosity
-        run: dotnet restore MyApp/MyApp.csproj 
+      - name: Restore packages 
+        run: dotnet restore 
 
       - name: Build
-        run: dotnet build MyApp/MyApp.csproj
+        run: dotnet build 
