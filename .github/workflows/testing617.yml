@@ -16,6 +16,7 @@ jobs:
             https://nuget.pkg.github.com/${{ github.gowridurgad }}/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
-
-      - run: dotnet restore
+      - name: Build solution
+        run: dotnet build MyApp/MyApp.csproj
+      - run: dotnet restore MyApp/MyApp.csproj
        
