@@ -1,4 +1,4 @@
-name: test167
+name: Test167
 
 on:
   workflow_dispatch:
@@ -6,13 +6,14 @@ on:
 jobs:
   multi-source-test:
     runs-on: ubuntu-latest
+
     env:
       NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+     
 
     steps:
       - uses: actions/checkout@v4
 
-      # Create a custom NuGet.Config with multiple sources
       - name: Add NuGet.Config with multiple sources
         run: |
           cat > NuGet.Config <<EOF
@@ -20,12 +21,10 @@ jobs:
           <configuration>
             <packageSources>
               <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-              <add key="github" value="https://nuget.pkg.github.com/gowriduragd/index.json" />
+              <add key="github" value="https://nuget.pkg.github.com/gowridurgad/index.json" />
             </packageSources>
           </configuration>
           EOF
-
-      # Setup .NET SDK (use your required version)
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
@@ -33,14 +32,11 @@ jobs:
           source-url: |
             https://api.nuget.org/v3/index.json
             https://nuget.pkg.github.com/gowridurgad/index.json
-
-      # Restore NuGet packages using both sources, with authentication for GitHub
+          
       - name: Restore NuGet packages
-        run: dotnet restore ./MyApp/MyApp.csproj --configfile NuGet.Config
-        env:
-          # Workaround for authenticated GitHub package source
-          NuGetPackageSourceCredentials_github: Username=${{ github.actor }};Password=${{ secrets.TOKEN_GITHUB }}
+        run: dotnet restore ./MyApp/MyApp.csproj
 
-      # Optionally build your application
+      # Optionally test a build
       - name: Build
-        run: dotnet build ./MyApp/MyApp.csproj
+        run: dotnet build
+        working-directory: ./MyApp
