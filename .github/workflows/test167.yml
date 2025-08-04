@@ -5,7 +5,7 @@ on:
 
 jobs:
   multi-source-test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     env:
       NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
