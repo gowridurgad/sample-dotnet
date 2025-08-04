@@ -1,4 +1,4 @@
-name: Test Multiple NuGet Sources
+name: test167
 
 on:
   workflow_dispatch:
