@@ -31,7 +31,7 @@ jobs:
           dotnet-version: '9.x'
           source-url: |
             https://api.nuget.org/v3/index.json
-            https://nuget.pkg.github.com/gowriduragd/index.json
+            https://nuget.pkg.github.com/gowridurgad/index.json
 
       - name: Restore NuGet packages
         run: dotnet restore ./MyApp/MyApp.csproj
