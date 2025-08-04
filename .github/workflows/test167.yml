@@ -21,7 +21,7 @@ jobs:
           <configuration>
             <packageSources>
               <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-              <add key="github" value="https://nuget.pkg.github.com/gowridurgad/index.json" />
+              <add key="github" value="https://nuget.pkg.github.com/durga/index.json" />
             </packageSources>
           </configuration>
           EOF
@@ -31,7 +31,7 @@ jobs:
           dotnet-version: '9.x'
           source-url: https://api.nuget.org/v3/index.json
       - name: Add GitHub NuGet Source with authentication
-        run: dotnet nuget add source https://nuget.pkg.github.com/gowridurgad/index.json --name github --username ${{ github.actor }} --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text
+        run: dotnet nuget add source https://nuget.pkg.github.com/durga/index.json --name github --username ${{ github.actor }} --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text
            
           
       - name: Restore NuGet packages
