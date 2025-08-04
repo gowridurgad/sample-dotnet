@@ -9,6 +9,7 @@ jobs:
 
     env:
       NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+     
 
     steps:
       - uses: actions/checkout@v4
@@ -24,23 +25,19 @@ jobs:
             </packageSources>
           </configuration>
           EOF
-
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
-          source-url: |
-            https://api.nuget.org/v3/index.json
-            https://nuget.pkg.github.com/gowridurgad/index.json
-
+          source-url: https://api.nuget.org/v3/index.json
+      - name: Add GitHub NuGet Source with authentication
+        run: dotnet nuget add source https://nuget.pkg.github.com/gowridurgad/index.json --name github --username ${{ github.actor }} --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text
+           
+          
       - name: Restore NuGet packages
         run: dotnet restore ./MyApp/MyApp.csproj
-        env:
-          NuGetPackageSourceCredentials_github: Username=${{ github.actor }};Password=${{ secrets.TOKEN_GITHUB  }}
 
       # Optionally test a build
       - name: Build
         run: dotnet build
         working-directory: ./MyApp
-        env:
-          NuGetPackageSourceCredentials_github: Username=${{ github.actor }};Password=${{ secrets.GITHUB_TOKEN }}
