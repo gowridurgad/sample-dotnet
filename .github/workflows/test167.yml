@@ -13,26 +13,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Add NuGet.Config with multiple sources
-        run: |
-          cat > NuGet.Config <<EOF
-          <?xml version="1.0" encoding="utf-8"?>
-          <configuration>
-            <packageSources>
-              <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-              <add key="github" value="https://nuget.pkg.github.com/gowriduragd/index.json" />
-            </packageSources>
-          </configuration>
-          EOF
-
-      - name: Setup .NET
+      # Setup .NET Core (default NuGet.org source is included automatically)
+      - name: Setup .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
 
+      # Add GitHub Packages Source (use your username in the URL)
+      - name: Add GitHub Packages Source
+        shell: bash
+        run: dotnet nuget add source https://nuget.pkg.github.com/gowriduragd/index.json --name github --username ${{ github.actor }} --password ${{ secrets.TOKEN_GITHUB }} --store-password-in-clear-text
+
+      # Restore NuGet packages (from all configured sources)
       - name: Restore NuGet packages
         run: dotnet restore ./MyApp/MyApp.csproj
 
+      # Optionally test a build
       - name: Build
-        run: dotnet build
-        working-directory: ./MyApp
+        run: dotnet build ./MyApp/MyApp.csproj
