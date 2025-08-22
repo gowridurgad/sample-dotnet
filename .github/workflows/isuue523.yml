@@ -1,0 +1,20 @@
+name: testing#523
+
+on:
+ workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0'
+      - run: dotnet workload update
+      - run: dotnet workload install maui aspire
+          
