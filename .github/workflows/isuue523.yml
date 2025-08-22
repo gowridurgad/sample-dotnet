@@ -15,6 +15,5 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.0'
-      - run: dotnet workload --info
-      # - run: dotnet workload install aspire
-          
+      - run: dotnet workload update
+      - run: dotnet workload install maui aspire
