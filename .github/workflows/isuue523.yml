@@ -16,5 +16,5 @@ jobs:
         with:
           dotnet-version: '9.0'
       - run: dotnet workload update
-      - run: dotnet workload install maui aspire
+      - run: dotnet workload install aspire
           
