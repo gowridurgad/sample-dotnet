@@ -1,0 +1,51 @@
+name: Dotnet CLI Debug Test
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  test-dotnet-cli:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log environment before dotnet setup
+        run: |
+          echo "PATH: $PATH"
+          echo "DOTNET_ROOT: $DOTNET_ROOT"
+          which dotnet || echo "dotnet not found"
+          dotnet --info || echo "dotnet not installed"
+        shell: bash
+
+      - name: Setup .NET 8.0.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Log environment after dotnet setup
+        run: |
+          echo "PATH: $PATH"
+          echo "DOTNET_ROOT: $DOTNET_ROOT"
+          which dotnet || echo "dotnet not found"
+          dotnet --info
+        shell: bash
+
+      - name: Validate Formatting
+        run: dotnet format --no-restore --verify-no-changes --verbosity detailed
+
+      - name: Where is dotnet? (Windows only)
+        if: runner.os == 'Windows'
+        run: |
+          echo "PATH: $env:PATH"
+          echo "DOTNET_ROOT: $env:DOTNET_ROOT"
+          Get-Command dotnet -All
+          dotnet --info
+        shell: pwsh
+
+      - name: Workflow completed
+        run: echo "Workflow completed on ${{ runner.os }}"
