@@ -1,39 +1,176 @@
-name: Dotnet CLI Repro Test
+# The calling repository workflow should specify that secrets inherit.
+# The PACKAGES_READ_PAT secret must be defined at organization level in GitHub.
+# see: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit
 
 on:
+  workflow_call:
+    inputs:
+
+      skip-format-check:
+        type: boolean
+        # Implicit default is false.
+        required: false
+      
+      create-empty-dummy-files:
+        type: string
+        # Implicit default is empty string.
+        required: false
   
-  workflow_dispatch:
+      targets-windows:
+        type: boolean
+        # Implicit default is false, which will result in NETSDK1100 error when building projects targeting Windows on a Linux runner.
+        required: false
+
+      workloads:
+        type: string # Implicit default is an empty string
+        required: false
 
 jobs:
-  dotnet-repro:
-    runs-on: ${{ matrix.os }}
+  dotnet:
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [ubuntu-22.04, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - uses: actions/checkout@v4
 
-      - name: Setup .NET SDK 8
-        uses: actions/setup-dotnet@v5
-        with:
-          dotnet-version: '8.0.x'
+    # Our CPC-Systems/ScheduleTimeChecker action needs yq to be available.
+    # GitHub decided to not make it available: https://github.com/actions/runner-images/issues/7443#issuecomment-1514597691
+    - name: Make yq tool available on Windows runners
+      if: "matrix.os == 'windows-latest'"
+      run: choco install yq
 
-      - name: Show .NET info
-        run: dotnet --info
+    - uses: CPC-Systems/ScheduleTimeChecker@v1
 
-      - name: Build project
-        run: dotnet build MyApp/MyApp.csproj
+    - uses: CPC-Systems/SetupDotNet@v9
+      id: setup_dotnet
+      with:
+        workloads: ${{ inputs.workloads }}
 
-      - name: Restore
-        run: dotnet restore MyApp/MyApp.csproj
+    # We've seen sporadic issues whereby steps after the step that calls our SetupDotNet
+    # action encounter an environment where dotnet appears not yet to be configured to
+    # match that specified in the solution's global.json file.
+    # This step is an attempt to 'wait' for dotnet to be available as we expect it to be.
+    - name: Wait for dotnet version availability
+      shell: bash
+      run: |
+        ATTEMPTS=0
+        until [ $ATTEMPTS -gt 100 ]; do
+            DOTNET_CMD_VERSION=$(dotnet --version)
 
-      - name: Validate Formatting
-        run: dotnet format MyApp/MyApp.csproj
+            if [[ "$DOTNET_CMD_VERSION" == "${{ steps.setup_dotnet.outputs.dotnet-version }}" ]]; then
+                echo "SDK version from dotnet tool is as expected."
+                exit 0
+            fi
 
-      # Optionally, set DOTNET_ROOT for Windows as seen in the error logs
-      - name: Set DOTNET_ROOT and run format (Windows only)
-        if: runner.os == 'Windows'
-        env:
-          DOTNET_ROOT: 'C:\Program Files\dotnet'
-        run: dotnet format MyApp/MyApp.csproj  --no-restore --verify-no-changes --verbosity detailed
+            sleep .1
+            ((ATTEMPTS++))
+        done
+
+        echo "SDK version from dotnet tool is not as expected."
+        exit 1
+
+    - name: Add GitHub Packages NuGet Source
+      env:
+        PACKAGES_READ_PAT: ${{ secrets.PACKAGES_READ_PAT }}
+      shell: bash # required when running on Windows
+      run: |
+        if [[ -z "$PACKAGES_READ_PAT" ]]; then
+          echo "::error::The required PACKAGES_READ_PAT secret is missing."
+          exit 1
+        fi
+        dotnet nuget add source \
+          https://nuget.pkg.github.com/CPC-Systems/index.json \
+          --name "CPC-Systems GitHub Packages" \
+          --username "USERNAME" \
+          --password "${PACKAGES_READ_PAT}" \
+          --store-password-in-clear-text
+    
+    - name: Standard Restore # Not Including Windows Target(s) on Linux
+      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+      run: dotnet restore
+
+    - name: Alternative Restore (Includes Windows Target(s) on Linux)
+      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+      run: dotnet restore -property:EnableWindowsTargeting=true
+
+    - name: Report on Packages with newer versions to the GitHub Step Summary
+      run: |
+        echo '### Outdated Direct Package References' >> $GITHUB_STEP_SUMMARY
+        echo '' >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        dotnet list package --outdated >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        echo '' >> $GITHUB_STEP_SUMMARY
+
+    - name: Report on Packages with vulnerabilities to the GitHub Step Summary
+      shell: bash # required when running on Windows
+      run: |
+        dotnet list package --vulnerable --include-transitive 2>&1 | tee vulnerable-packages.log
+        echo '### Vulnerable Package References' >> $GITHUB_STEP_SUMMARY
+        echo '' >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        cat vulnerable-packages.log >> $GITHUB_STEP_SUMMARY
+        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+        echo '' >> $GITHUB_STEP_SUMMARY
+        grep --quiet "Critical\|High\|Moderate" vulnerable-packages.log && VULN="Y" || VULN="N"
+        if [[ "$VULN" == "Y" ]]; then
+          echo "::error::Vulnerable package dependencies found. Inspect the build log or job summary for details."
+          exit 66
+        fi
+
+    - name: Validate Formatting
+      if: "!inputs.skip-format-check"
+      run: dotnet format --no-restore --verify-no-changes --verbosity detailed
+    
+    - name: Create Empty Dummy Files
+      if: inputs.create-empty-dummy-files != ''
+      shell: bash # required when running on Windows
+      run: echo "${{ inputs.create-empty-dummy-files }}" | xargs --max-args=1 --no-run-if-empty touch
+
+    - name: Standard Build (Debug configuration) # Not Including Windows Target(s) on Linux
+      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+      run: dotnet build --no-restore
+
+    - name: Alternative Build (Debug configuration, Includes Windows Target(s) on Linux)
+      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+      run: dotnet build --no-restore -property:EnableWindowsTargeting=true
+
+    - name: Test (Debug configuration)
+      run: dotnet test --no-build --verbosity normal
+
+    - name: Standard Build (Release configuration) # Not Including Windows Target(s) on Linux
+      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+      run: dotnet build --no-restore --configuration Release
+
+    - name: Alternative Build (Release configuration, Includes Windows Target(s) on Linux)
+      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+      run: dotnet build --no-restore --configuration Release -property:EnableWindowsTargeting=true
+
+    - name: Test (Release configuration)
+      run: dotnet test --no-build --verbosity normal --configuration Release
+
+    - name: Standard Pack # Not Including Windows Target(s) on Linux
+      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+      run: dotnet pack --no-build --configuration Release
+
+    - name: Alternative Pack (Includes Windows Target(s) on Linux)
+      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+      run: dotnet pack --no-build --configuration Release -property:EnableWindowsTargeting=true
+
+    # There can be build logic specific to clean, so test that too
+
+    - name: Standard Clean # Not Including Windows Target(s) on Linux
+      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+      run: |
+        dotnet clean
+        dotnet clean --configuration Release
+
+    - name: Alternative Clean (Includes Windows Target(s) on Linux)
+      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+      run: |
+        dotnet clean -property:EnableWindowsTargeting=true
+        dotnet clean --configuration Release -property:EnableWindowsTargeting=true
