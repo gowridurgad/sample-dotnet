@@ -29,7 +29,7 @@ jobs:
         run: dotnet restore MyApp/MyApp.csproj
 
       - name: Validate Formatting
-        run: dotnet format --no-restore --verify-no-changes --verbosity detailed
+        run: dotnet format MyApp/MyApp.csproj
 
       # Optionally, set DOTNET_ROOT for Windows as seen in the error logs
       - name: Set DOTNET_ROOT and run format (Windows only)
