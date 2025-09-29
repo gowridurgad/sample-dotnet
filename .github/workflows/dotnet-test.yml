@@ -1,7 +1,7 @@
 # The calling repository workflow should specify that secrets inherit.
 # The PACKAGES_READ_PAT secret must be defined at organization level in GitHub.
 # see: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idsecretsinherit
-
+name: Dotnet Test
 on:
   workflow_call:
     inputs:
