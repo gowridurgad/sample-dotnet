@@ -36,4 +36,4 @@ jobs:
         if: runner.os == 'Windows'
         env:
           DOTNET_ROOT: 'C:\Program Files\dotnet'
-        run: dotnet format --no-restore --verify-no-changes --verbosity detailed
+        run: dotnet format MyApp/MyApp.csproj  --no-restore --verify-no-changes --verbosity detailed
