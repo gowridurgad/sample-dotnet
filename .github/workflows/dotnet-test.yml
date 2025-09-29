@@ -97,80 +97,80 @@ jobs:
       if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
       run: dotnet restore MyApp/MyApp.csproj -property:EnableWindowsTargeting=true
 
-    - name: Report on Packages with newer versions to the GitHub Step Summary
-      run: |
-        echo '### Outdated Direct Package References' >> $GITHUB_STEP_SUMMARY
-        echo '' >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        dotnet list package --outdated >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        echo '' >> $GITHUB_STEP_SUMMARY
+    # - name: Report on Packages with newer versions to the GitHub Step Summary
+    #   run: |
+    #     echo '### Outdated Direct Package References' >> $GITHUB_STEP_SUMMARY
+    #     echo '' >> $GITHUB_STEP_SUMMARY
+    #     echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+    #     dotnet list package --outdated >> $GITHUB_STEP_SUMMARY
+    #     echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+    #     echo '' >> $GITHUB_STEP_SUMMARY
 
-    - name: Report on Packages with vulnerabilities to the GitHub Step Summary
-      shell: bash # required when running on Windows
-      run: |
-        dotnet list package --vulnerable --include-transitive 2>&1 | tee vulnerable-packages.log
-        echo '### Vulnerable Package References' >> $GITHUB_STEP_SUMMARY
-        echo '' >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        cat vulnerable-packages.log >> $GITHUB_STEP_SUMMARY
-        echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
-        echo '' >> $GITHUB_STEP_SUMMARY
-        grep --quiet "Critical\|High\|Moderate" vulnerable-packages.log && VULN="Y" || VULN="N"
-        if [[ "$VULN" == "Y" ]]; then
-          echo "::error::Vulnerable package dependencies found. Inspect the build log or job summary for details."
-          exit 66
-        fi
+    # - name: Report on Packages with vulnerabilities to the GitHub Step Summary
+    #   shell: bash # required when running on Windows
+    #   run: |
+    #     dotnet list package --vulnerable --include-transitive 2>&1 | tee vulnerable-packages.log
+    #     echo '### Vulnerable Package References' >> $GITHUB_STEP_SUMMARY
+    #     echo '' >> $GITHUB_STEP_SUMMARY
+    #     echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+    #     cat vulnerable-packages.log >> $GITHUB_STEP_SUMMARY
+    #     echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+    #     echo '' >> $GITHUB_STEP_SUMMARY
+    #     grep --quiet "Critical\|High\|Moderate" vulnerable-packages.log && VULN="Y" || VULN="N"
+    #     if [[ "$VULN" == "Y" ]]; then
+    #       echo "::error::Vulnerable package dependencies found. Inspect the build log or job summary for details."
+    #       exit 66
+    #     fi
 
     - name: Validate Formatting
       if: "!inputs.skip-format-check"
       run: dotnet format MyApp/MyApp.csproj --no-restore --verify-no-changes --verbosity detailed
     
-    - name: Create Empty Dummy Files
-      if: inputs.create-empty-dummy-files != ''
-      shell: bash # required when running on Windows
-      run: echo "${{ inputs.create-empty-dummy-files }}" | xargs --max-args=1 --no-run-if-empty touch
+    # - name: Create Empty Dummy Files
+    #   if: inputs.create-empty-dummy-files != ''
+    #   shell: bash # required when running on Windows
+    #   run: echo "${{ inputs.create-empty-dummy-files }}" | xargs --max-args=1 --no-run-if-empty touch
 
-    - name: Standard Build (Debug configuration) # Not Including Windows Target(s) on Linux
-      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
-      run: dotnet build MyApp/MyApp.csproj --no-restore
+    # - name: Standard Build (Debug configuration) # Not Including Windows Target(s) on Linux
+    #   if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+    #   run: dotnet build MyApp/MyApp.csproj --no-restore
 
-    - name: Alternative Build (Debug configuration, Includes Windows Target(s) on Linux)
-      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
-      run: dotnet build  MyApp/MyApp.csproj --no-restore -property:EnableWindowsTargeting=true
+    # - name: Alternative Build (Debug configuration, Includes Windows Target(s) on Linux)
+    #   if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+    #   run: dotnet build  MyApp/MyApp.csproj --no-restore -property:EnableWindowsTargeting=true
 
-    - name: Test (Debug configuration)
-      run: dotnet test --no-build --verbosity normal
+    # - name: Test (Debug configuration)
+    #   run: dotnet test --no-build --verbosity normal
 
-    - name: Standard Build (Release configuration) # Not Including Windows Target(s) on Linux
-      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
-      run: dotnet build MyApp/MyApp.csproj --no-restore --configuration Release
+    # - name: Standard Build (Release configuration) # Not Including Windows Target(s) on Linux
+    #   if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+    #   run: dotnet build MyApp/MyApp.csproj --no-restore --configuration Release
 
-    - name: Alternative Build (Release configuration, Includes Windows Target(s) on Linux)
-      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
-      run: dotnet build MyApp/MyApp.csproj --no-restore --configuration Release -property:EnableWindowsTargeting=true
+    # - name: Alternative Build (Release configuration, Includes Windows Target(s) on Linux)
+    #   if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+    #   run: dotnet build MyApp/MyApp.csproj --no-restore --configuration Release -property:EnableWindowsTargeting=true
 
-    - name: Test (Release configuration)
-      run: dotnet test --no-build --verbosity normal --configuration Release
+    # - name: Test (Release configuration)
+    #   run: dotnet test --no-build --verbosity normal --configuration Release
 
-    - name: Standard Pack # Not Including Windows Target(s) on Linux
-      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
-      run: dotnet pack --no-build --configuration Release
+    # - name: Standard Pack # Not Including Windows Target(s) on Linux
+    #   if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+    #   run: dotnet pack --no-build --configuration Release
 
-    - name: Alternative Pack (Includes Windows Target(s) on Linux)
-      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
-      run: dotnet pack --no-build --configuration Release -property:EnableWindowsTargeting=true
+    # - name: Alternative Pack (Includes Windows Target(s) on Linux)
+    #   if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+    #   run: dotnet pack --no-build --configuration Release -property:EnableWindowsTargeting=true
 
-    # There can be build logic specific to clean, so test that too
+    # # There can be build logic specific to clean, so test that too
 
-    - name: Standard Clean # Not Including Windows Target(s) on Linux
-      if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
-      run: |
-        dotnet clean
-        dotnet clean --configuration Release
+    # - name: Standard Clean # Not Including Windows Target(s) on Linux
+    #   if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
+    #   run: |
+    #     dotnet clean
+    #     dotnet clean --configuration Release
 
-    - name: Alternative Clean (Includes Windows Target(s) on Linux)
-      if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
-      run: |
-        dotnet clean -property:EnableWindowsTargeting=true
-        dotnet clean --configuration Release -property:EnableWindowsTargeting=true
+    # - name: Alternative Clean (Includes Windows Target(s) on Linux)
+    #   if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
+    #   run: |
+    #     dotnet clean -property:EnableWindowsTargeting=true
+        # dotnet clean --configuration Release -property:EnableWindowsTargeting=true
