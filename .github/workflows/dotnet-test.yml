@@ -45,7 +45,7 @@ jobs:
 
     # - uses: CPC-Systems/ScheduleTimeChecker@v1
 
-    - uses: sample-dotnet/SetupDotNet@v9
+    - uses: actions/setup-dotnet@v9
       id: setup_dotnet
       with:
         workloads: ${{ inputs.workloads }}
