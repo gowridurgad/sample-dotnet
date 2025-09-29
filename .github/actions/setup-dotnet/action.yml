@@ -1,0 +1,83 @@
+name: Setup .NET CLI Environment
+description: Installs the requested .NET SDK version, where that version is specified by the current solution.
+
+inputs:
+  workloads:
+    type: string # Implicit default is an empty string
+    required: false
+
+outputs:
+  # Intentionally matching the name used by:
+  # https://github.com/actions/setup-dotnet?tab=readme-ov-file#dotnet-version
+  dotnet-version:
+    description: "The version of the .NET SDK required to build the solution."
+    value: ${{ steps.global_json.outputs.dotnet-sdk-version }}
+
+runs:
+  using: "composite"
+  steps:
+
+    # We no longer explicitly set/override dotnet-version for actions/setup-dotnet here because
+    # it is picked up by that action from the source repository's global.json file. What we do want
+    # to do, however, is insist that that file must exist and that it was used as expected.
+
+    # Extract .NET SDK version from global.json
+    - id: global_json
+      shell: bash
+      run: |
+        if [ ! -f global.json ]; then
+          echo "SDK version must be configured via global.json file."
+          exit 1
+        fi
+        DOTNET_SDK_VERSION=$(jq --raw-output .sdk.version global.json)
+        echo "dotnet-sdk-version=${DOTNET_SDK_VERSION}" >> $GITHUB_OUTPUT
+
+    - uses: actions/setup-dotnet@v5
+      id: setup_dotnet
+
+    # Abort if global.json not used by actions/setup-dotnet, according to its action output
+    - if: ${{ steps.global_json.outputs.dotnet-sdk-version != steps.setup_dotnet.outputs.dotnet-version }}
+      shell: bash
+      run: |
+        echo "global.json: [${{ steps.global_json.outputs.dotnet-sdk-version }}]"
+        echo "actions/setup-dotnet output: [${{ steps.setup_dotnet.outputs.dotnet-version }}]"
+        echo "actions/setup-dotnet did not use SDK version from global.json"
+        exit 1
+
+    # Abort if global.json not reflected by the dotnet command
+    - shell: bash
+      run: |
+        DOTNET_CMD_VERSION=$(dotnet --version)
+        if [[ "$DOTNET_CMD_VERSION" != "${{ steps.global_json.outputs.dotnet-sdk-version }}" ]]; then
+          echo "SDK version from global.json is not reflected by dotnet command."
+          exit 1
+        fi
+
+    # Some .NET solutions need a .NET workload restore to be run before `dotnet restore` will work for them.
+    # An example is frontend code using AOT compilation which requires the wasm-tools workload.
+    # Those solutions MUST include the "workloadVersion" key alongside their "version" key in their "sdk"
+    # object in global.json, where "workloadVersion" seems to typically need to match "version" - e.g. "8.0.407".
+
+    # .NET Workload List (informational, before install/restore).
+    - if: inputs.workloads != ''
+      shell: bash
+      run: dotnet workload list
+
+    # .NET Workload Restore (non-Windows, needs to use sudo).
+    - if: runner.os != 'Windows' && inputs.workloads != ''
+      shell: bash
+      run: |
+        echo "${{ inputs.workloads }}" | xargs --verbose --max-args=1 --no-run-if-empty sudo dotnet workload install
+        sudo dotnet workload restore
+
+    # .NET Workload Restore (Windows, no sudo available or required).
+    - if: runner.os == 'Windows' && inputs.workloads != ''
+      shell: bash
+      run: |
+        echo "${{ inputs.workloads }}" | xargs --max-args=1 --no-run-if-empty dotnet workload install
+        dotnet workload restore
+
+    # .NET Workload List (informational, after install/restore).
+    - if: inputs.workloads != ''
+      shell: bash
+      run: dotnet workload list
