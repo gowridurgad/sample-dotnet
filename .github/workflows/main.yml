@@ -7,5 +7,4 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/dotnet-test.yml
-    with:
-      dotnet-version: '8.0.414'
+    
