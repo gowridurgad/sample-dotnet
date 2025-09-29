@@ -91,11 +91,11 @@ jobs:
     
     - name: Standard Restore # Not Including Windows Target(s) on Linux
       if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
-      run: dotnet restore
+      run: dotnet restore MyApp/MyApp.csproj
 
     - name: Alternative Restore (Includes Windows Target(s) on Linux)
       if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
-      run: dotnet restore -property:EnableWindowsTargeting=true
+      run: dotnet restore MyApp/MyApp.csproj -property:EnableWindowsTargeting=true
 
     - name: Report on Packages with newer versions to the GitHub Step Summary
       run: |
@@ -124,7 +124,7 @@ jobs:
 
     - name: Validate Formatting
       if: "!inputs.skip-format-check"
-      run: dotnet format --no-restore --verify-no-changes --verbosity detailed
+      run: dotnet format MyApp/MyApp.csproj --no-restore --verify-no-changes --verbosity detailed
     
     - name: Create Empty Dummy Files
       if: inputs.create-empty-dummy-files != ''
@@ -133,22 +133,22 @@ jobs:
 
     - name: Standard Build (Debug configuration) # Not Including Windows Target(s) on Linux
       if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
-      run: dotnet build --no-restore
+      run: dotnet build MyApp/MyApp.csproj --no-restore
 
     - name: Alternative Build (Debug configuration, Includes Windows Target(s) on Linux)
       if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
-      run: dotnet build --no-restore -property:EnableWindowsTargeting=true
+      run: dotnet build  MyApp/MyApp.csproj --no-restore -property:EnableWindowsTargeting=true
 
     - name: Test (Debug configuration)
       run: dotnet test --no-build --verbosity normal
 
     - name: Standard Build (Release configuration) # Not Including Windows Target(s) on Linux
       if: "!(matrix.os == 'ubuntu-22.04' && inputs.targets-windows)"
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build MyApp/MyApp.csproj --no-restore --configuration Release
 
     - name: Alternative Build (Release configuration, Includes Windows Target(s) on Linux)
       if: matrix.os == 'ubuntu-22.04' && inputs.targets-windows
-      run: dotnet build --no-restore --configuration Release -property:EnableWindowsTargeting=true
+      run: dotnet build MyApp/MyApp.csproj --no-restore --configuration Release -property:EnableWindowsTargeting=true
 
     - name: Test (Release configuration)
       run: dotnet test --no-build --verbosity normal --configuration Release
