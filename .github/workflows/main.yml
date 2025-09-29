@@ -1,0 +1,12 @@
+name: Run Dotnet Test via Reusable Workflow
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/dotnet-test.yml
+    with:
+      dotnet-version: '8.0.414'
