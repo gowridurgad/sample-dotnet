@@ -8,6 +8,6 @@ jobs:
   
     steps:
       - name: setup-dotnet
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '4'
+          dotnet-version: '4.x'
