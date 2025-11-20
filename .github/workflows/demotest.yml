@@ -1,26 +1,31 @@
-name: 'demo-test'
-on:
-  workflow_dispatch:
+name: dotnet install reproduce error
+
+on: 
+ workflow_dispatch:
+
 jobs:
-  setup:
-    name: Setup .NET on all platforms
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [macos-latest]
+  dotnet-install-error:
+    runs-on: windows-latest
+
     steps:
-      - name: setup-dotnet
+      - name: Checkout
+        uses: actions/checkout@v4
+
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Use .NET 8
+        run: dotnet --version
+
+      # Install .NET 9
+      - name: Setup .NET 9
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
-      # - name: 'verify-dotnet'
-      #   run: |
-      #     dotnet tool install --global dotnet-script --version 1.6.0
-      #     cat <<'EOF' > test.csx
-      #     var version = Environment.Version;
-      #     if (version.Major != 9 || version.Minor != 0)
-      #     {
-      #       throw new Exception($"Want .NET 9.0.x, got {version}");
-      #     }
-      #     EOF
-      #     dotnet-script test.csx
+
+      - name: Use .NET 10
+        run: dotnet --version
+   
