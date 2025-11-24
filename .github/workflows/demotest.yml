@@ -16,17 +16,14 @@ jobs:
         with:
           dotnet-version: '6.0.x'
 
-      # This will launch a dotnet process that doesn't exit immediately!
-      - name: Start a long-running dotnet process in background
-        shell: pwsh
-        run: |
-          Start-Process -NoNewWindow -FilePath "dotnet" -ArgumentList "help"
-          Start-Sleep -Seconds 30
-
+      - name: Restore packages with verbosity
+        run: dotnet restore MyApp/MyApp.csproj 
+        
       - name: Setup .NET 7 (should hit the lock issue)
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.0.x'
-
-      - name: Use .NET 7
-        run: dotnet --list-sdks
+          
+      - name: Restore packages with verbosity
+        run: dotnet restore MyApp/MyApp.csproj 
+        
