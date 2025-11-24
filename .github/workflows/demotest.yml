@@ -12,12 +12,12 @@ jobs:
         uses: actions/checkout@v4
 
 
-      - name: Setup .NET 6
+      - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@testing-642
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
-      - name: Use .NET 9
+      - name: Use .NET 8
         run: dotnet --list-sdks
 
     
