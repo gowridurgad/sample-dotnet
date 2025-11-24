@@ -1,7 +1,7 @@
-name: Dotnet Install File Lock Reproduce Error
+name: dotnet install reproduce error
 
 on: 
-  workflow_dispatch:
+ workflow_dispatch:
 
 jobs:
   dotnet-install-error:
@@ -11,23 +11,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET 8
-        uses: gowridurgad/setup-dotnet@testing-642
-        with:
-          dotnet-version: '8.0.x'
 
-      - name: Restore packages 
-        run: dotnet restore MyApp/MyApp.csproj 
-      - name: Build
-        run: dotnet build MyApp/MyApp.csproj
-        
-      - name: Setup .NET 9 (should hit the lock issue)
-        uses: gowridurgad/setup-dotnet@testing-642
+      - name: Setup .NET 6
+        uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '9.0.x'
-          
-      - name: Restore packages
-        run: dotnet restore MyApp/MyApp.csproj 
-      - name: Build
-        run: dotnet build MyApp/MyApp.csproj
-        
+          dotnet-version: '6.0.x'
+
+      - name: Use .NET 6
+        run: dotnet --version
+
+    
+      - name: Setup .NET 7
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Use .NET 7
+        run: dotnet --version
