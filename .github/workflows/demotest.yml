@@ -11,20 +11,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup .NET 6
+      - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@testing-642
         with:
-          dotnet-version: '6.0.x'
+          dotnet-version: '8.0.x'
 
       - name: Restore packages 
         run: dotnet restore MyApp/MyApp.csproj 
       - name: Build
         run: dotnet build MyApp/MyApp.csproj
         
-      - name: Setup .NET 7 (should hit the lock issue)
+      - name: Setup .NET 9 (should hit the lock issue)
         uses: gowridurgad/setup-dotnet@testing-642
         with:
-          dotnet-version: '7.0.x'
+          dotnet-version: '9.0.x'
           
       - name: Restore packages
         run: dotnet restore MyApp/MyApp.csproj 
