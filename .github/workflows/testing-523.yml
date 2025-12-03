@@ -17,6 +17,7 @@ jobs:
         uses: gowridurgad/setup-dotnet@523-feature
         with:
           dotnet-version: '9.0.x'
+          workloads: wasm-tools
           
       
       - name: Show installed workloads
