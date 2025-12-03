@@ -15,6 +15,7 @@ jobs:
         uses: gowridurgad/setup-dotnet@523-feature
         with:
           dotnet-version: '8.0.x'
+          workloads: maui
    
 
       - name: Show installed workloads
