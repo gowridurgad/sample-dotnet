@@ -4,8 +4,10 @@ on:
 
 jobs:
   dotnet-install-matrix:
-    runs-on: macos-latest
- 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
       - name: Checkout
@@ -15,13 +17,8 @@ jobs:
         uses: gowridurgad/setup-dotnet@523-feature
         with:
           dotnet-version: '9.0.x'
-          workloads:  maui cloud
+          
       
       - name: Show installed workloads
         run: dotnet workload list
 
-      - name: Restore packages
-        run: dotnet restore MyApp/MyApp.csproj
-
-      - name: Build
-        run: dotnet build MyApp/MyApp.csproj
