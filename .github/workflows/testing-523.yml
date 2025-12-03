@@ -14,8 +14,8 @@ jobs:
       - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@523-feature
         with:
-          dotnet-version: '8.0.x'
-          workloads: aspnetcore
+          dotnet-version: '9.0.x'
+          workloads:  maui cloud
       
       - name: Show installed workloads
         run: dotnet workload list
