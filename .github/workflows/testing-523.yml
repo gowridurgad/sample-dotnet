@@ -4,10 +4,8 @@ on:
 
 jobs:
   dotnet-install-matrix:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: ubuntu-latest
+ 
 
     steps:
       - name: Checkout
