@@ -1,27 +1,29 @@
 name: workloads-523
 on: 
- workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
-  dotnet-install-error:
-    runs-on: windows-latest
+  dotnet-install-matrix:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-
-      - name: Setup .NET 6
+      - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@523-feature
         with:
           dotnet-version: '8.0.x'
           workloads: maui
-   
-
+      
       - name: Show installed workloads
         run: dotnet workload list
 
       - name: Restore packages
-        run: dotnet restore MyApp/MyApp.csproj 
+        run: dotnet restore MyApp/MyApp.csproj
+
       - name: Build
         run: dotnet build MyApp/MyApp.csproj
