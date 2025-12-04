@@ -14,13 +14,14 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Setup .NET 8
-        # uses: gowridurgad/setup-dotnet@523-feature
-        uses: actions/setup-dotnet@v5
+        uses: gowridurgad/setup-dotnet@523-feature
         with:
-          dotnet-version: '9.0.x'
+         dotnet-version: | 
+             8.0.x
+             9.0.x
+         workloads: wasm-tools
           
-      - name: Show installed workloads
-        run:  dotnet workload restore MyApp/MyApp.csproj
+     
       
       - name: Show installed workloads
         run: dotnet workload list
