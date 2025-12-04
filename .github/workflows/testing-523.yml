@@ -24,6 +24,8 @@ jobs:
       
       - name: Show installed workloads
         run: dotnet workload list
+      - name: Restore packages
+        run: dotnet restore MyApp/MyApp.csproj 
 
        
 
