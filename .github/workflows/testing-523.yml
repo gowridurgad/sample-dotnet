@@ -18,7 +18,7 @@ jobs:
         with:
          # dotnet-version: 8.0.x
          global-json-file: global.json
-           workloads: wasm-tools
+         workloads: wasm-tools
           
      
       
