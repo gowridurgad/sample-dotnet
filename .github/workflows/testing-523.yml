@@ -16,9 +16,9 @@ jobs:
       - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@523-feature
         with:
-         # dotnet-version: 8.0.x
-         global-json-file: global.json
+         dotnet-version: 8.0.x
          workloads: wasm-tools
+         cache: true
           
      
       
