@@ -8,29 +8,33 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
-        dotnet: [ '10.0.x', '9.0.x', '8.0.x' ]
+        dotnet: [ '9.0.x' ]
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
-
-      
+        uses: actions/checkout@v5    
 
       - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@523-feature
-        id: stepid
         # uses: actions/setup-dotnet@v5
         with:
          dotnet-version: ${{ matrix.dotnet }}
          workloads: wasm-tools
-
-      - name: Create temporary global.json
-        run: echo '{"sdk":{"version": "${{ steps.stepid.outputs.dotnet-version }}"}}' > ./global.json
- 
+         
           
-      
-      - name: Show installed workloads
-        run: dotnet workload list
+         
+         source-url: |
+            https://api.nuget.org/v3/index.json
+            # https://nuget.pkg.github.com/gowriduragd/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
+
+      - name: Build
+        run: dotnet build MyApp/MyApp.csproj
+      - name: Create the package
+        run: dotnet pack --configuration Release MyApp/MyApp.csproj
+      - name: Publish the package to GPR
+        run: dotnet nuget push  MyApp/MyApp.csproj/bin/Release/*.nupkg
 
 
        
