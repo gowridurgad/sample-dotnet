@@ -19,13 +19,9 @@ jobs:
         # uses: actions/setup-dotnet@v5
         with:
          dotnet-version: ${{ matrix.dotnet }}
-         workloads: wasm-tools
+         workloads: wasm-tools   
          
-          
-         
-         source-url: |
-            https://api.nuget.org/v3/index.json
-            # https://nuget.pkg.github.com/gowriduragd/index.json
+         source-url: https://nuget.pkg.github.com/gowriduragd/index.json
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
