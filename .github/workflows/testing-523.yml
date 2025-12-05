@@ -18,10 +18,14 @@ jobs:
 
       - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@523-feature
+        id: stepid
         # uses: actions/setup-dotnet@v5
         with:
          dotnet-version: ${{ matrix.dotnet }}
          workloads: wasm-tools
+
+      - name: Create temporary global.json
+        run: echo '{"sdk":{"version": "${{ steps.stepid.outputs.dotnet-version }}"}}' > ./global.json
  
           
       
