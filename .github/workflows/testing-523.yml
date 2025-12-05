@@ -13,8 +13,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
-      - name: Ensure NuGet cache directory exists
-        run: mkdir -p "$HOME/.nuget/packages"
+     
 
       - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@523-feature
