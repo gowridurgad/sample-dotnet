@@ -22,13 +22,13 @@ jobs:
           workloads: wasm-tools
 
       - name: Restore dependencies
-        run: dotnet restore MyApp/MyApp.csproj
+        run: dotnet restore app/app.csproj
 
       - name: Build
-        run: dotnet build --configuration Release MyApp/MyApp.csproj
+        run: dotnet build --configuration Release --no-restore app/app.csproj
 
       - name: Pack
-        run: dotnet pack --configuration Release -o ./nupkgs MyApp/MyApp.csproj
+        run: dotnet pack --configuration Release --no-build app/app.csproj
 
-      - name: Publish to GitHub Packages
-        run: dotnet nuget push ./nupkgs/*.nupkg  --source "github" --api-key ${{ secrets.TOKEN_github }}
+      - name: Publish to NuGet
+        run: dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
