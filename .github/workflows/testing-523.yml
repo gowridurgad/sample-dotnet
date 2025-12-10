@@ -1,5 +1,8 @@
 name: workloads-523
-on:
+permissions:
+  contents: write
+  packages: write
+on: 
   workflow_dispatch:
 
 jobs:
@@ -8,27 +11,26 @@ jobs:
     strategy:
       matrix:
         os: [windows-latest, macos-latest, ubuntu-latest]
-        dotnet: ['9.0.x']
+        dotnet: [ '9.0.x' ]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v5    
 
-      - name: Setup .NET
-        # uses: actions/setup-dotnet@v5
+      - name: Setup .NET 8
         uses: gowridurgad/setup-dotnet@523-feature
+        # uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: ${{ matrix.dotnet }}
-          workloads: wasm-tools
-
-      - name: Restore dependencies
-        run: dotnet restore MyApp/MyApp.csproj
+         dotnet-version: ${{ matrix.dotnet }}
+         workloads: wasm-tools   
+         
+         source-url: https://nuget.pkg.github.com/gowriduragd/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.TOKEN_GITHUB }}
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore MyApp/MyApp.csproj
-
-      - name: Pack
-        run: dotnet pack --configuration Release --no-build  MyApp/MyApp.csproj
-
-      - name: Publish to NuGet
-        run: dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet build MyApp/MyApp.csproj
+      - name: Create the package
+        run: dotnet pack --configuration Release MyApp/MyApp.csproj
+      - name: Publish the package to GPR
+        run: dotnet nuget push  MyApp/bin/Release/*.nupkg
