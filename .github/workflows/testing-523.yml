@@ -38,7 +38,7 @@ jobs:
       #   run: dotnet nuget push ./nupkg/*.nupkg -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish the package to nuget.org
-        run: dotnet nuget push MyApp/bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push  MyApp/MyApp.csproj.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
         env:
              NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
       
