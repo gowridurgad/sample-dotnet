@@ -34,9 +34,13 @@ jobs:
       - name: Pack project
         run: dotnet pack --configuration Release --output ./nupkg MyApp/MyApp.csproj
 
-      - name: Publish to GitHub Packages
-        run: dotnet nuget push ./nupkg/*.nupkg -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GITHUB_TOKEN }}
-         
+      # - name: Publish to GitHub Packages
+      #   run: dotnet nuget push ./nupkg/*.nupkg -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish the package to nuget.org
+        run: dotnet nuget push */bin/Release/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
+        env:
+             NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
       
       # - name: Build
       #   run: dotnet build
