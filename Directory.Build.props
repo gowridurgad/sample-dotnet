@@ -17,7 +17,7 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
 
     <!-- Conformed across all projects as they all publish/release simultaneously. -->
-    <Version>2.4.3</Version>
+    <Version>2.4.4</Version>
     <Authors>CPC Systems</Authors>
     <Company>CPC Systems Ltd</Company>
     <RepositoryUrl>https://github.com/CPC-Systems/Json</RepositoryUrl>
