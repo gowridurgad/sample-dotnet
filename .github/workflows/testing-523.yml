@@ -1,54 +1,21 @@
 name: workloads-523
-permissions:
-  contents: write
-  packages: write
 on: 
-  workflow_dispatch:
+ workflow_dispatch:
 
 jobs:
-  dotnet-install-matrix:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ ubuntu-22.04, ubuntu-latest, macos-latest, windows-latest, windows-2022 ]
-        dotnet: [ '9.0.x' ]
+  dotnet-install-error:
+    runs-on: windows-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v5    
+        uses: actions/checkout@v4
 
-      - name: Setup .NET 8
-        uses: gowridurgad/setup-dotnet@523-feature
-        # uses: actions/setup-dotnet@v5
+
+      - name: Setup .NET 6
+        uses: gowridurgad/setup-dotnet@workload-523
         with:
-         dotnet-version: ${{ matrix.dotnet }}
-         workloads: wasm-tools   
+          dotnet-version: '6.0.x'
+          workloads: maui, aspire
 
-
-      - name: Restore dependencies
-        run: dotnet restore MyApp/MyApp.csproj
-
-      - name: Build project
-        run: dotnet build --configuration Release  MyApp/MyApp.csproj
-
-      - name: Pack project
-        run: dotnet pack --configuration Release --output ./nupkg MyApp/MyApp.csproj
-
-      # - name: Publish to GitHub Packages
-      #   run: dotnet nuget push ./nupkg/*.nupkg -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GITHUB_TOKEN }}
-
-      # - name: Publish the package to nuget.org
-      #   run: dotnet nuget push ./nupkg/*.nupkg -k $NUGET_AUTH_TOKEN -s https://api.nuget.org/v3/index.json
-      #   env:
-      #        NUGET_AUTH_TOKEN: ${{ secrets.NUGET_KEY }}
-
-      - name: Publish to NuGet
-        run: dotnet nuget push '**/*.nupkg' --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
-
-      
-      # - name: Build
-      #   run: dotnet build
-      # - name: Create the package
-      #   run: dotnet pack --configuration Release 
-      # - name: Publish to GitHub Packages
-      #   run: dotnet nuget push ./nupkg/*.nupkg -s https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json -k ${{ secrets.GITHUB_TOKEN }}
+      - name: Show installed workloads
+        run: dotnet workload list
