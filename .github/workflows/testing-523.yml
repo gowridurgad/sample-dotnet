@@ -14,8 +14,10 @@ jobs:
       - name: Setup .NET 6
         uses: gowridurgad/setup-dotnet@workload-523
         with:
-          dotnet-version: '6.0.x'
-          workloads: maui aspire
+          dotnet-version: '9.0.x'
+          workloads: |
+                 maui
+                 aspire
 
       - name: Show installed workloads
         run: dotnet workload list
