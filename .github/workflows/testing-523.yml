@@ -15,7 +15,7 @@ jobs:
         uses: gowridurgad/setup-dotnet@workload-523
         with:
           dotnet-version: '9.0.x'
-          workloads: ''
+          workloads: mual
 
       - name: Show installed workloads
         run: dotnet workload list
