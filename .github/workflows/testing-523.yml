@@ -1,10 +1,10 @@
-name: workloads-523
+name: testing
 on: 
  workflow_dispatch:
 
 jobs:
   dotnet-install-error:
-    runs-on: windows-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout
@@ -12,11 +12,11 @@ jobs:
 
 
       - name: Setup .NET 6
-        uses: gowridurgad/setup-dotnet@workload-523
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.0.x'
-          workloads: maui
 
+      - name: Build API
+        run: dotnet build MyApp/MyApp.csproj
+        
 
-      - name: Show installed workloads
-        run: dotnet workload list
