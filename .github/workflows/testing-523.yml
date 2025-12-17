@@ -18,5 +18,8 @@ jobs:
 
       - name: Build API
         run: dotnet build MyApp/MyApp.csproj
+
+      - name: dotnet info
+        run: dotnet --info
         
 
