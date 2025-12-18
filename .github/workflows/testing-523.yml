@@ -17,6 +17,9 @@ jobs:
           echo "arch: $(arch)"
           uname -m
 
+      - name: Clean old dotnet
+        run: rm -rf ~/.dotnet
+
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
         with:
