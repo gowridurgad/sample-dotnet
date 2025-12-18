@@ -1,7 +1,6 @@
-name: testing688
-
+name: testing
 on: 
-  workflow_dispatch:
+ workflow_dispatch:
 
 jobs:
   dotnet-install-error:
@@ -11,27 +10,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      # Add this diagnostic step
-      - name: Print runner architecture before installing dotnet
-        run: |
-          echo "arch: $(arch)"
-          uname -m
 
-      - name: Clean old dotnet
-        run: rm -rf ~/.dotnet
-
-      - name: Setup .NET
+      - name: Setup .NET 6
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: '9.0.x'
-         
-
-      # Add another diagnostic step
-      - name: Print dotnet info (after install)
-        run: |
-          dotnet --info
-          echo "arch: $(arch)"
-          uname -m
+          dotnet-version: '8.0.x'
 
       - name: Build API
         run: dotnet build MyApp/MyApp.csproj
+
+   
