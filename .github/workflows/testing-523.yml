@@ -16,6 +16,7 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '8.0.x'
+          architecture: 'arm64'
 
       - name: Build API
         run: dotnet build MyApp/MyApp.csproj
