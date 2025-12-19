@@ -4,7 +4,7 @@ on:
 
 jobs:
   dotnet-install-error:
-    runs-on: self-hosted
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
