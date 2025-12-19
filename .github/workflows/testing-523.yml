@@ -9,6 +9,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+      - name: Remove user-local dotnet SDKs
+        run: rm -rf ~/.dotnet
 
 
       - name: Setup .NET 
