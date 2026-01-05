@@ -18,6 +18,7 @@ jobs:
         with:
           dotnet-version: '9.0.x'
           workloads: wasm-tools
+          workload-update: true
           
       
       - name: Show installed workloads
