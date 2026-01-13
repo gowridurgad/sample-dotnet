@@ -18,6 +18,9 @@ jobs:
         with:
           dotnet-version: '10.0.x'
           workloads: mauili
+
+      - name: Show .NET version
+        run: dotnet --version
           
       
       - name: Show installed workloads
