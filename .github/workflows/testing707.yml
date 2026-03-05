@@ -25,7 +25,7 @@ jobs:
         dotnet-version: 9.0.x
 
     - name: 'Restore packages'
-      run: dotnet restore MyApp
+      run: dotnet restore MyApp/MyApp.csproj
 
     - name: Test
-      run: dotnet test MyApp
+      run: dotnet test MyApp/MyApp.csproj
