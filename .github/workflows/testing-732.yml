@@ -22,11 +22,7 @@ jobs:
     - name: Diagnose dotnet used
       shell: bash
       run: |
-          which dotnet
           dotnet --info
-          dotnet --list-sdks
-          cd source
-          echo "SDK selected in source/: $(dotnet --version)"
-          dotnet workload --info || true
+          dotnet workload install maui -v diag
    
    
