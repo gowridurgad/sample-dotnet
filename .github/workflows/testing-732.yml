@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, macos-latest]
+        os: [macos-latest]
    
     steps:
     - uses: actions/checkout@v6
@@ -18,5 +18,15 @@ jobs:
       with:
           global-json-file: global.json
           workloads: maui
+
+    - name: Diagnose dotnet used
+      shell: bash
+      run: |
+          which dotnet
+          dotnet --info
+          dotnet --list-sdks
+          cd source
+          echo "SDK selected in source/: $(dotnet --version)"
+          dotnet workload --info || true
    
    
